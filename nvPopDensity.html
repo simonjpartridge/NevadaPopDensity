@@ -90,13 +90,6 @@
 
     tracts = topojson.feature(ca, ca.objects.tracts);
 
-
-//    var max = d3.max(tracts.features, function(d){return d.properties.population / d.properties.area * 2.58999e6});
-//
-//    console.log(max);
-
-
-
     // Clip tracts to land.
     svg.append("defs").append("clipPath")
         .attr("id", "clip-land")
@@ -126,10 +119,9 @@
         .attr("d", path);
   });
 
-
+  
   drawKey();
   d3.select(self.frameElement).style("height", height + "px");
-
 
 
   function changeColors(){
@@ -140,7 +132,7 @@
       color = color1;
     }
 
-
+    //change colors for each area
     d3.select('.tract')
       .selectAll('path')
       .data(d3.nest()
@@ -148,28 +140,22 @@
           .entries(tracts.features.filter(function(d) { return d.properties.area; })))
     .transition()
     .duration(1000)
-      .style("fill", function(d){return d.key})
-    ;
+    .style("fill", function(d){return d.key});
 
     drawKey();
-
   }
 
 
-
-  function drawKey(){
-
-     var g = svg.append("g")
-      .attr("class", "key")
-      .attr("transform", "translate(400,20)");
-
-  var scale = 1;
+function drawKey(){
+  var g = svg.append("g")
+    .attr("class", "key")
+    .attr("transform", "translate(400,20)");
 
   g.selectAll("rect")
       .data(color.range().map(function(d, i) {
         return {
           x0: i ? x(color.domain()[i - 1]) : x.range()[0],
-          x1: i < color.domain().length ?  x(color.domain()[i]) : scale * x.range()[1],
+          x1: i < color.domain().length ?  x(color.domain()[i]) :  x.range()[1],
           z: d
         };
       }))
@@ -200,12 +186,8 @@
       .duration(1000)
       .attr("class", "tract");
     }
-
     tractBorders =  !tractBorders;
-
   }
-
-
   </script>
 
   <p>Simon Partridge<br>
